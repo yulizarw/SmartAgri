@@ -1,0 +1,18 @@
+# Mengabaikan folder download library (sangat berat)
+node_modules/
+
+# Mengabaikan file konfigurasi sensitif (password, token, API key)
+.env
+.env.local
+
+# Mengabaikan file log / error logs
+npm-debug.log*
+yarn-debug.log*
+
+# Mengabaikan folder hasil build (jika nanti pakai TypeScript)
+dist/
+build/
+
+# Mengabaikan file sistem operasi
+.DS_Store
+Thumbs.db
