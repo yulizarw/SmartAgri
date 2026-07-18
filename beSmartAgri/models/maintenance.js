@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Maintenance.belongsTo(Device, {
+        foreignKey: "deviceId"
+      });
+
     }
   }
   Maintenance.init({

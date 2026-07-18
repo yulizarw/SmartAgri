@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      Sensor.hasMany(SensorReading, {
+        foreignKey: "sensorId"
+      });
+
+      Sensor.belongsTo(Device, {
+        foreignKey: "deviceId"
+      });
+
     }
   }
   Sensor.init({

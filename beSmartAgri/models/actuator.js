@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Actuator.hasMany(ActuatorLog, {
+        foreignKey: "actuatorId"
+      });
+
+      Actuator.belongsTo(Device, {
+        foreignKey: "deviceId"
+      });
+
     }
   }
   Actuator.init({

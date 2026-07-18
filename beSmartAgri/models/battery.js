@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      Battery.hasMany(BatteryReading, {
+        foreignKey: "batteryId"
+      });
+
+      Battery.belongsTo(Farm, {
+        foreignKey: "farmId"
+      });
+
     }
   }
   Battery.init({

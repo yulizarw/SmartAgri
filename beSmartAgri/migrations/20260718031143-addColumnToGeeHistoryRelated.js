@@ -2,16 +2,19 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     queryInterface.addColumn('GeeHistories', 'cropId', {
       type: Sequelize.INTEGER,
-      references: { model: 'Crops', key: 'id' },
+      references: {
+        model: 'Crops',
+        key: 'id'
+      },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-      })
+    })
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     queryInterface.removeColumn('GeeHistories', 'cropId')
   }
 };

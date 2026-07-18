@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      BatteryReading.belongsTo(Battery, {
+        foreignKey: "batteryId"
+      });
+
     }
   }
   BatteryReading.init({

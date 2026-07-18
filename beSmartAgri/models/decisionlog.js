@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DecisionLog.belongsTo(Recommendation, {
+        foreignKey: "recommendationId"
+      });
+
     }
   }
   DecisionLog.init({

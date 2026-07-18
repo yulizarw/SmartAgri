@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      GeeHistory.belongsTo(Farm, {
+        foreignKey: "farmId"
+      });
+
+      GeeHistory.belongsTo(Crop, {
+        foreignKey: "cropId"
+      });
+
+
     }
   }
   GeeHistory.init({
