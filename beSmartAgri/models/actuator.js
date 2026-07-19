@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Actuator.hasMany(ActuatorLog, {
+      Actuator.hasMany(models.ActuatorLog, {
         foreignKey: "actuatorId"
       });
 
-      Actuator.belongsTo(Device, {
+      Actuator.belongsTo(models.Device, {
         foreignKey: "deviceId"
       });
 

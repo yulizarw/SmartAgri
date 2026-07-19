@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      Battery.hasMany(BatteryReading, {
+      Battery.hasMany(models.BatteryReading, {
         foreignKey: "batteryId"
       });
 
-      Battery.belongsTo(Farm, {
+      Battery.belongsTo(models.Farm, {
         foreignKey: "farmId"
       });
 

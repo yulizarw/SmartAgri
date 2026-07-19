@@ -11,65 +11,65 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Farm.hasMany(Crop, {
+      Farm.hasMany(models.Crop, {
         foreignKey: "farmId"
       });
 
-      Farm.hasOne(Soil, {
+      Farm.hasOne(models.Soil, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Device, {
+      Farm.hasMany(models.Device, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Pond, {
+      Farm.hasMany(models.Pond, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(WaterTank, {
+      Farm.hasMany(models.WaterTank, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(SolarPanel, {
+      Farm.hasMany(models.SolarPanel, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Battery, {
+      Farm.hasMany(models.Battery, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(MPPT, {
+      Farm.hasMany(models.MPPT, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(GeeHistory, {
+      Farm.hasMany(models.GeeHistory, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(CropHealth, {
+      Farm.hasMany(models.CropHealth, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Alert, {
+      Farm.hasMany(models.Alert, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(WeatherForecast, {
+      Farm.hasMany(models.WeatherForecast, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Schedule, {
+      Farm.hasMany(models.Schedule, {
         foreignKey: "farmId"
       });
 
-      Farm.hasMany(Experiment, {
+      Farm.hasMany(models.Experiment, {
         foreignKey: "farmId"
       });
 
 
 
-      Farm.belongsTo(User, {
+      Farm.belongsTo(models.User, {
         foreignKey: "userId"
       });
 

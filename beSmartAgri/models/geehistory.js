@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      GeeHistory.belongsTo(Farm, {
+      GeeHistory.belongsTo(models.Farm, {
         foreignKey: "farmId"
       });
 
-      GeeHistory.belongsTo(Crop, {
+      GeeHistory.belongsTo(models.Crop, {
         foreignKey: "cropId"
       });
 

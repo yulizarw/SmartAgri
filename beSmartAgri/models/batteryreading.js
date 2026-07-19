@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      BatteryReading.belongsTo(Battery, {
+      BatteryReading.belongsTo(models.Battery, {
         foreignKey: "batteryId"
       });
 

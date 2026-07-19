@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ActuatorLog.belongsTo(Actuator, {
+      ActuatorLog.belongsTo(models.Actuator, {
         foreignKey: "actuatorId"
       });
 

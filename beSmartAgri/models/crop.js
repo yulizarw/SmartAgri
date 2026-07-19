@@ -11,16 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Crop.hasMany(CropHealth, {
+      Crop.hasMany(models.CropHealth, {
         foreignKey: "cropId"
       });
 
-      Crop.hasMany(GeeHistory, {
+      Crop.hasMany(models.GeeHistory, {
         foreignKey: "cropId"
       });
 
 
-      Crop.belongsTo(Farm, {
+      Crop.belongsTo(models.Farm, {
         foreignKey: "farmId"
       });
 

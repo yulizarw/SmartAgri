@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Soil.belongsTo(Farm, {
+      Soil.belongsTo(models.Farm, {
         foreignKey: "farmId"
       });
 

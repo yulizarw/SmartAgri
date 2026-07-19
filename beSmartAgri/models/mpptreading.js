@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      MPPTReading.belongsTo(MPPT, {
+      MPPTReading.belongsTo(models.MPPT, {
         foreignKey: "mpptId"
       });
 
