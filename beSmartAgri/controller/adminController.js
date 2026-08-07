@@ -58,43 +58,7 @@ module.exports = class adminController {
         }
     }
 
-    // static async createFarm(req, res) {
-    //     try {
-    //         let adminIsLogin = req.userLogin.roleId
-    //         let params = {
-    //             name: req.body.name,
-    //             // area itu luas lahan yang dihitung dari frontendaja
-    //             area: req.body.area,
-    //             latitude: req.body.latitude,
-    //             longitude: req.body.longitude,
-    //             polygon: req.body.polygon,
-    //             address: req.body.address,
-    //             status: req.body.status,
-    //             userId: req.body.userId
-    //         }
-    //         if (adminIsLogin) {
-    //             let searchFarm = await Farm.findOne({
-    //                 where: {
-    //                     name: params.name
-    //                 }
-    //             })
-    //             if (!searchFarm) {
-    //                 let buatFarm = await Farm.create(params)
-    //                 if (buatFarm) {
-    //                     res.status(201).json('Lahan Berhasil dibuat')
-    //                 } else {
-    //                     res.status(400).json('Lahan Tidak Berhasil dibuat')
-    //                 }
-    //             } else {
-    //                 res.status(409).json('Lahan sudah ada')
-    //             }
-    //         } else {
-    //             res.status(401).json('Anda Tidak Memiliki Akses Ini')
-    //         }
-    //     } catch (err) {
-    //         res.status(500).json(err)
-    //     }
-    // }
+
     static async createFarm(req, res) {
 
         try {
@@ -148,6 +112,103 @@ module.exports = class adminController {
 
         }
 
+    }
+
+    static async listFarm(req, res) {
+        try {
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+
+            const listAllFarm = await Farm.findAll()
+
+            return res.status(201).json(listAllFarm);
+
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+    static async updateFarm(req, res) {
+        try {
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+            let id = req.params.id
+            let params = {
+                name: req.body.name,
+                area: req.body.area,
+                latitude: req.body.latitude,
+                longitude: req.body.longitude,
+                polygon: req.body.polygon,
+                address: req.body.address,
+                status: req.body.status,
+                userId: req.body.userId
+            };
+
+            const searchFarm = await Farm.findOne({
+                where: {
+                    id
+                }
+            });
+            // console.log(searchFarm.name)
+            if (searchFarm) {
+                const changeDataFarm = await Farm.update(params, {
+                    where: {
+                        id
+                    },
+                    returning: true
+                })
+                return res.status(201).json(`Data pada ${searchFarm.name} telah diganti`)
+            }
+
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+    static async deleteFarm(req, res) {
+        try {
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+            let id = req.params.id
+            const searchFarm = await Farm.findOne({
+                where: {
+                    id
+                }
+            });
+
+            if (!searchFarm){
+                return res.status(404).json(`Tidak terdapat data Lahan ini`)
+            }
+
+            let hapusFarm = await Farm.destroy({where:{id}})
+            return res.status(201).json(`Data ${searchFarm.name} telah dihapus`)
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
     }
 
 }

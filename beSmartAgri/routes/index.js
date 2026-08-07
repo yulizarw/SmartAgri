@@ -1,7 +1,7 @@
 const routes = require('express').Router()
 const userRoutes = require('./userRoutes')
 // const productRoutes = require('./productRoutes')
-const simulatorRoutes = require ('./simulatorRoutes')
+const deviceRoutes = require ('./deviceRoutes')
 const adminRoutes = require ('./adminRoutes')
 
 
@@ -11,7 +11,7 @@ routes.use('/patriot', adminRoutes)
 // user
 routes.use('/user',userRoutes)
 // simulator
-routes.use('/simulators',simulatorRoutes)
+routes.use('/devices',deviceRoutes)
 
 // routes.use('/products', productRoutes)
 
