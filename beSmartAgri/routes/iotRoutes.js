@@ -19,6 +19,15 @@ router.post(
     IoTController.info
 );
 
+router.post(
+    "/sensor-reading",
+    IoTController.sensorReading
+);
+
+router.get(
+    "/device/:deviceCode",
+    IoTController.getDevice
+);
 
 module.exports = router;
 
