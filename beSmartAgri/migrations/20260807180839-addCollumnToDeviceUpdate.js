@@ -15,7 +15,7 @@ module.exports = {
       onDelete: 'CASCADE'
       }),
       queryInterface.addColumn('Devices', 'lastSeen', {
-      type: Sequelize.STRING,
+      type: Sequelize.DATE,
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
       }),

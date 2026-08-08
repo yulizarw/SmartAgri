@@ -40,6 +40,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.BOOLEAN,
     apiKey: DataTypes.STRING,
     lastSeen: DataTypes.DATE,
+    macAddress:DataTypes.STRING,
+    connectionType: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Device',

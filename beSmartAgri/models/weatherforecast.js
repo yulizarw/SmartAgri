@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     rain: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
 
@@ -58,12 +58,12 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     soilMoisture: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
 
     radiation: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
 
