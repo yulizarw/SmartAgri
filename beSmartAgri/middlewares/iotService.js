@@ -110,14 +110,15 @@ class IoTService {
 
         const device = await Device.findOne({
             where: {
-                deviceCode: deviceCode
+                deviceCode: deviceCode,
+                
             }
         });
-
+        console.log(device)
         if (!device) {
             throw new Error("Device tidak terdaftar");
         }
-
+        console.log(device.apiKey)
         if (device.apiKey !== apiKey) {
             throw new Error("API Key tidak valid");
         }
@@ -169,6 +170,181 @@ class IoTService {
     // SENSOR READING
     // ==================================================
 
+    // static async saveSensorReadings(
+    //     deviceCode,
+    //     apiKey,
+    //     readings,
+    //     timestamp
+    // ) {
+
+    //     // -----------------------------------------------
+    //     // 1. Cari Device
+    //     // -----------------------------------------------
+
+    //     const device = await Device.findOne({
+
+    //         where: {
+    //             deviceCode: deviceCode
+    //         }
+
+    //     });
+
+
+    //     if (!device) {
+
+    //         throw new Error(
+    //             "Device tidak terdaftar"
+    //         );
+
+    //     }
+
+
+    //     // -----------------------------------------------
+    //     // 2. Validasi API Key
+    //     // -----------------------------------------------
+
+    //     if (device.apiKey !== apiKey) {
+
+    //         throw new Error(
+    //             "API Key tidak valid"
+    //         );
+
+    //     }
+
+
+    //     // -----------------------------------------------
+    //     // 3. Validasi readings
+    //     // -----------------------------------------------
+
+    //     if (
+    //         !Array.isArray(readings) ||
+    //         readings.length === 0
+    //     ) {
+
+    //         throw new Error(
+    //             "Data readings tidak boleh kosong"
+    //         );
+
+    //     }
+
+
+    //     // -----------------------------------------------
+    //     // 4. Timestamp
+    //     // -----------------------------------------------
+
+    //     const recordedAt =
+    //         timestamp ?
+    //         new Date(timestamp) :
+    //         new Date();
+
+
+    //     // -----------------------------------------------
+    //     // 5. Simpan setiap sensor
+    //     // -----------------------------------------------
+
+    //     const savedReadings = [];
+
+    //     for (const reading of readings) {
+
+    //         if (
+    //             !reading.sensorType ||
+    //             reading.value === undefined
+    //         ) {
+
+    //             continue;
+
+    //         }
+
+
+    //         // Cari sensor berdasarkan device
+    //         // dan sensorType
+
+    //         const sensor = await Sensor.findOne({
+
+    //             where: {
+
+    //                 deviceId: device.id,
+
+    //                 sensorType: reading.sensorType
+
+    //             }
+
+    //         });
+
+
+    //         // Sensor belum didaftarkan
+    //         if (!sensor) {
+
+    //             savedReadings.push({
+
+    //                 sensorType: reading.sensorType,
+
+    //                 status: "SENSOR_NOT_REGISTERED"
+
+    //             });
+
+    //             continue;
+
+    //         }
+
+
+    //         // -------------------------------------------
+    //         // Simpan Sensor Reading
+    //         // -------------------------------------------
+
+    //         const sensorReading =
+    //             await SensorReading.create({
+
+    //                 sensorId: sensor.id,
+
+    //                 value: reading.value,
+
+    //                 recordedAt: recordedAt
+
+    //             });
+
+
+    //         savedReadings.push({
+
+    //             sensorId: sensor.id,
+
+    //             sensorType: reading.sensorType,
+
+    //             value: reading.value,
+
+    //             status: "SUCCESS"
+
+    //         });
+
+    //     }
+
+
+    //     // -----------------------------------------------
+    //     // 6. Update Device
+    //     // -----------------------------------------------
+
+    //     await device.update({
+
+    //         lastSeen: new Date(),
+
+    //         status: true
+
+    //     });
+
+
+    //     return {
+
+    //         deviceId: device.id,
+
+    //         deviceCode: device.deviceCode,
+
+    //         recordedAt: recordedAt,
+
+    //         readings: savedReadings
+
+    //     };
+
+    // }
     static async saveSensorReadings(
         deviceCode,
         apiKey,
@@ -176,87 +352,86 @@ class IoTService {
         timestamp
     ) {
 
-        // -----------------------------------------------
+        // ================================================
         // 1. Cari Device
-        // -----------------------------------------------
+        // ================================================
 
         const device = await Device.findOne({
-
             where: {
                 deviceCode: deviceCode
             }
-
         });
 
-
         if (!device) {
-
-            throw new Error(
-                "Device tidak terdaftar"
-            );
-
+            throw new Error("Device tidak terdaftar");
         }
 
 
-        // -----------------------------------------------
+        // ================================================
         // 2. Validasi API Key
-        // -----------------------------------------------
+        // ================================================
 
         if (device.apiKey !== apiKey) {
-
-            throw new Error(
-                "API Key tidak valid"
-            );
-
+            throw new Error("API Key tidak valid");
         }
 
 
-        // -----------------------------------------------
+        // ================================================
         // 3. Validasi readings
-        // -----------------------------------------------
+        // ================================================
 
         if (
             !Array.isArray(readings) ||
             readings.length === 0
         ) {
-
             throw new Error(
                 "Data readings tidak boleh kosong"
             );
-
         }
 
 
-        // -----------------------------------------------
+        // ================================================
         // 4. Timestamp
-        // -----------------------------------------------
+        // ================================================
 
-        const recordedAt =
-            timestamp ?
+        const recordedAt = timestamp ?
             new Date(timestamp) :
             new Date();
 
 
-        // -----------------------------------------------
-        // 5. Simpan setiap sensor
-        // -----------------------------------------------
+        // ================================================
+        // 5. Tampung hasil
+        // ================================================
 
         const savedReadings = [];
 
+
+        // ================================================
+        // 6. Loop setiap sensor
+        // ================================================
+
         for (const reading of readings) {
+
+            // Validasi data sensor
 
             if (
                 !reading.sensorType ||
-                reading.value === undefined
+                reading.value === undefined ||
+                reading.value === null
             ) {
 
-                continue;
+                savedReadings.push({
+                    sensorType: reading.sensorType || null,
+                    status: "INVALID_DATA"
+                });
 
+                continue;
             }
 
 
-            // Cari sensor berdasarkan device
-            // dan sensorType
+            // ============================================
+            // Cari sensor
+            // ============================================
 
             const sensor = await Sensor.findOne({
 
@@ -271,32 +446,36 @@ class IoTService {
             });
 
 
-            // Sensor belum didaftarkan
+            // ============================================
+            // Sensor belum terdaftar
+            // ============================================
+
             if (!sensor) {
 
                 savedReadings.push({
 
                     sensorType: reading.sensorType,
 
+                    value: reading.value,
+
                     status: "SENSOR_NOT_REGISTERED"
 
                 });
 
                 continue;
-
             }
 
 
-            // -------------------------------------------
-            // Simpan Sensor Reading
-            // -------------------------------------------
+            // ============================================
+            // Simpan SensorReading
+            // ============================================
 
             const sensorReading =
                 await SensorReading.create({
 
                     sensorId: sensor.id,
 
-                    value: reading.value,
+                    value: Number(reading.value),
 
                     recordedAt: recordedAt
 
@@ -309,7 +488,9 @@ class IoTService {
 
                 sensorType: reading.sensorType,
 
-                value: reading.value,
+                value: sensorReading.value,
+
+                recordedAt: sensorReading.recordedAt,
 
                 status: "SUCCESS"
 
@@ -318,9 +499,9 @@ class IoTService {
         }
 
 
-        // -----------------------------------------------
-        // 6. Update Device
-        // -----------------------------------------------
+        // ================================================
+        // 7. Update Device
+        // ================================================
 
         await device.update({
 
@@ -331,11 +512,17 @@ class IoTService {
         });
 
 
+        // ================================================
+        // 8. Return hasil
+        // ================================================
+
         return {
 
             deviceId: device.id,
 
             deviceCode: device.deviceCode,
+
+            farmId: device.farmId,
 
             recordedAt: recordedAt,
 

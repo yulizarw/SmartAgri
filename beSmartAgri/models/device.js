@@ -37,7 +37,9 @@ module.exports = (sequelize, DataTypes) => {
     deviceName: DataTypes.STRING,
     firmWare: DataTypes.STRING,
     ipAddress: DataTypes.STRING,
-    status: DataTypes.BOOLEAN
+    status: DataTypes.BOOLEAN,
+    apiKey: DataTypes.STRING,
+    lastSeen: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Device',

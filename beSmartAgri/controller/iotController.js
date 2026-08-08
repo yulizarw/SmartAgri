@@ -136,7 +136,7 @@ class IoTController {
 
             }
 
-
+            console.log(readings, 'dari raul')
             if (
                 !Array.isArray(readings) ||
                 readings.length === 0
@@ -201,6 +201,184 @@ class IoTController {
         }
 
     }
+    // debug
+    // static async saveSensorReadings(
+    //     deviceCode,
+    //     apiKey,
+    //     readings,
+    //     timestamp
+    // ) {
+
+    //     console.log("================================");
+    //     console.log("START SENSOR READING");
+    //     console.log("deviceCode :", deviceCode);
+    //     console.log("apiKey     :", apiKey);
+    //     console.log("readings   :", readings);
+    //     console.log("================================");
+
+
+    //     // =========================================
+    //     // CARI DEVICE
+    //     // =========================================
+
+    //     const device = await Device.findOne({
+    //         where: {
+    //             deviceCode: deviceCode
+    //         }
+    //     });
+
+    //     console.log("DEVICE:", device);
+
+
+    //     if (!device) {
+    //         throw new Error("Device tidak terdaftar");
+    //     }
+
+
+    //     // =========================================
+    //     // VALIDASI API KEY
+    //     // =========================================
+
+    //     if (device.apiKey !== apiKey) {
+
+    //         console.log("API KEY DB      :", device.apiKey);
+    //         console.log("API KEY REQUEST :", apiKey);
+
+    //         throw new Error("API Key tidak valid");
+    //     }
+
+
+    //     // =========================================
+    //     // VALIDASI READINGS
+    //     // =========================================
+
+    //     if (!Array.isArray(readings)) {
+    //         throw new Error("readings harus berupa array");
+    //     }
+
+
+    //     // =========================================
+    //     // LOOP SENSOR
+    //     // =========================================
+
+    //     const result = [];
+
+    //     for (const reading of readings) {
+
+    //         console.log("--------------------------------");
+    //         console.log("READING:", reading);
+
+
+    //         // =====================================
+    //         // CARI SENSOR
+    //         // =====================================
+
+    //         const sensor = await Sensor.findOne({
+    //             where: {
+    //                 deviceId: device.id,
+    //                 sensorType: reading.sensorType
+    //             }
+    //         });
+
+
+    //         console.log("SENSOR:", sensor);
+
+
+    //         if (!sensor) {
+
+    //             console.log(
+    //                 "Sensor tidak ditemukan:",
+    //                 reading.sensorType
+    //             );
+
+    //             result.push({
+    //                 sensorType: reading.sensorType,
+    //                 value: reading.value,
+    //                 status: "SENSOR_NOT_REGISTERED"
+    //             });
+
+    //             continue;
+    //         }
+
+
+    //         // =====================================
+    //         // INSERT SENSOR READING
+    //         // =====================================
+
+    //         console.log("AKAN INSERT:");
+
+    //         console.log({
+    //             sensorId: sensor.id,
+    //             value: Number(reading.value),
+    //             recordedAt: timestamp ?
+    //                 new Date(timestamp) :
+    //                 new Date()
+    //         });
+
+
+    //         const sensorReading =
+    //             await SensorReading.create({
+
+    //                 sensorId: sensor.id,
+
+    //                 value: Number(reading.value),
+
+    //                 recordedAt: timestamp ?
+    //                     new Date(timestamp) :
+    //                     new Date()
+
+    //             });
+
+
+    //         console.log(
+    //             "BERHASIL INSERT:",
+    //             sensorReading.toJSON()
+    //         );
+
+
+    //         result.push({
+
+    //             sensorId: sensor.id,
+
+    //             sensorType: sensor.sensorType,
+
+    //             value: sensorReading.value,
+
+    //             recordedAt: sensorReading.recordedAt,
+
+    //             status: "SUCCESS"
+
+    //         });
+
+    //     }
+
+
+    //     // =========================================
+    //     // UPDATE DEVICE
+    //     // =========================================
+
+    //     await device.update({
+
+    //         lastSeen: new Date(),
+
+    //         status: true
+
+    //     });
+
+
+    //     return {
+
+    //         deviceId: device.id,
+
+    //         deviceCode: device.deviceCode,
+
+    //         farmId: device.farmId,
+
+    //         readings: result
+
+    //     };
+
+    // }
 
     // ==================================================
     // GET /api/iot/device/:deviceCode
