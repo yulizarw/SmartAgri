@@ -26,6 +26,9 @@ routes.post('/create-device', adminController.createDevice)
 //create sensor
 routes.post('/create-sensor', adminController.createSensor)
 
+
+//create crops
+routes.post('/create-crop', adminController.createCrop)
 //assign device
 
 //dan seluruh pembacaan sensor,battery,gee,pokoknya seluruh tabel yang ada

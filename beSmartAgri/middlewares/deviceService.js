@@ -4,7 +4,7 @@ const {
 } = require("../models");
 
 const SimulatorService = require("./simulatorService");
-const MQTTService = require("./mqttService");
+const MQTTService = require("./geeService");
 
 class DeviceService {
 

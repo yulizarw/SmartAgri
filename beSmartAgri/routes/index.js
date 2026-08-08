@@ -4,7 +4,7 @@ const userRoutes = require('./userRoutes')
 const deviceRoutes = require ('./deviceRoutes')
 const adminRoutes = require ('./adminRoutes')
 const iotRoutes = require('./iotRoutes')
-
+const geeRoutes = require('./geeRoutes')
 //Admin
 routes.use('/patriot', adminRoutes)
 
@@ -15,6 +15,10 @@ routes.use('/devices',deviceRoutes)
 
 //iotRoutes
 routes.use('/iot', iotRoutes)
+
+//geeRoutes
+
+routes.use('/gee', geeRoutes)
 
 
 

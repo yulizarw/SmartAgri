@@ -60,13 +60,13 @@ module.exports = class userController {
 
     static async loginRole(req, res) {
         try {
-            
+
             let params = {
                 email: req.body.email,
                 password: req.body.password,
             }
 
-            console.log(params,'<<<<')
+            console.log(params, '<<<<')
 
             let loginUser = await User.findOne({
                 where: {
@@ -103,6 +103,46 @@ module.exports = class userController {
             } else {
                 res.status(400).json("Password / Email yang anda masukkan SALAH");
             }
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    }
+
+    static async resetPassword(req, res) {
+        try {
+            const {
+                email,
+                passwordBaru
+            } = req.body;
+
+            if (!email || !passwordBaru) {
+                return res.status(400).json({
+                    message: "Email dan password baru wajib diisi!"
+                });
+            }
+
+            // 1. Enkripsi manual password baru di sini
+            const saltRound = 10;
+            const passwordTerenkripsi = bcrypt.hashSync(passwordBaru, saltRound);
+
+            // 2. Simpan hasil enkripsi ke database (bukan text mentah)
+            const [updatedRows] = await User.update({
+                password: passwordTerenkripsi
+            }, {
+                where: {
+                    email: email
+                }
+            });
+
+            if (updatedRows === 0) {
+                return res.status(404).json({
+                    message: "User tidak ditemukan!"
+                });
+            }
+
+            return res.status(200).json({
+                message: "Password berhasil di-reset secara manual!"
+            });
         } catch (err) {
             res.status(500).json(err)
         }

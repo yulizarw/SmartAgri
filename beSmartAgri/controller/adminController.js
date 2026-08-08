@@ -4,7 +4,8 @@ const {
     Farm,
     Sensor,
     Device,
-    User
+    User,
+    Crop,
 } = require('../models')
 
 module.exports = class adminController {
@@ -280,6 +281,50 @@ module.exports = class adminController {
             return res.status(201).json(`${params.sensorType} pada ${params.pin} sudah tersimpan dalam database `)
         }catch(err){
             return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+    static async createCrop (req, res) {
+        try{
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+            // yang bisa di update itu bisa itu harvestDate, targetNdvi, soilmoisture dll
+            let params = {
+                cropName : req.body.cropName,
+                variety : req.body.variety,
+                plantingDate : req.body.plantingDate,
+                harvestDate : req.body.harvestDate,
+                targetMoisture : req.body.targetMoisture,
+                targetNDVI : req.body.targetNDVI,
+                targetTemperature : req.body.targetTemperature,
+                status : req.body.status,
+                farmId: req.body.farmId
+            }
+
+            let searchCrop = await Crop.findOne({
+                where: {
+                    cropName: params.cropName,
+                    farmId: params.farmId
+                }
+            })
+
+           
+            if (searchCrop){
+                return res.status(409).json(`${params.cropName} sudah ditanam pada lahan ${params.farmId}`)
+            }
+
+            await Crop.create(params)
+            return res.status(201).json(`${params.cropName} telah berhasil ditanam pada lahan ${params.farmId}`)
+        }catch(err){
+             return res.status(500).json({
                 success: false,
                 message: err.message
             });

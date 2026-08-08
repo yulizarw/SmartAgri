@@ -7,5 +7,7 @@ const { authentication } = require('../middlewares/auth')
 routes.post('/register', userController.registerUser)
 // login per role
 routes.post('/login', userController.loginRole)
+// reset password
+routes.patch('/reset-password', userController.resetPassword)
 
 module.exports = routes
