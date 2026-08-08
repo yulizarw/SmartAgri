@@ -18,9 +18,13 @@ routes.patch('/update-farm/:id', adminController.updateFarm)
 //delete farm
 routes.delete('/delete-farm/:id', adminController.deleteFarm)
 
+//--DEVICE MANAGEMENT--
 //create device
+routes.post('/create-device', adminController.createDevice)
+
 
 //create sensor
+routes.post('/create-sensor', adminController.createSensor)
 
 //assign device
 

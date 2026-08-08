@@ -211,4 +211,79 @@ module.exports = class adminController {
         }
     }
 
+    static async createDevice(req,res) {
+        try {
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+
+            let params = {
+                deviceCode: req.body.deviceCode,
+                deviceName: req.body.deviceName,
+                firmWare: req.body.firmWare,
+                ipAddress: req.body.ipAddress,
+                status: req.body.status,
+                farmId: req.body.farmId,
+                macAddress: req.body.macAddress,
+                connectionType: req.body.connectionType,
+                lastSeen: req.body.lastSeen,
+                apikey: "T4nahairku"
+            }
+
+            let searchDevice = await Device.findOne({where:{deviceCode:params.deviceCode}})
+            if (searchDevice) {
+                return res.status(409).json({
+                    message: "Device sudah ada"
+                });
+            }
+
+            let saveDevice = await Device.create(params)
+            return res.status(201).json(`${params.deviceCode} sudah tersimpan dalam database`)
+        }catch(err){
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+     static async createSensor(req,res) {
+        try {
+            const adminIsLogin = req.userLogin.roleId;
+
+            if (!adminIsLogin) {
+                return res.status(401).json({
+                    message: "Anda Tidak Memiliki Akses"
+                });
+            }
+
+            let params = {
+                sensorType: req.body.sensorType,
+                pin: req.body.pin,
+                unit: req.body.unit,
+                location: req.body.location,
+                deviceId: req.body.deviceId,
+            }
+
+            let searchDevice = await Sensor.findOne({where:{pin:params.pin}})
+            if (searchDevice) {
+                return res.status(409).json({
+                    message: "Sensor sudah ada untuk pin tersebut"
+                });
+            }
+
+            let saveDevice = await Sensor.create(params)
+            return res.status(201).json(`${params.sensorType} pada ${params.pin} sudah tersimpan dalam database `)
+        }catch(err){
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
 }
