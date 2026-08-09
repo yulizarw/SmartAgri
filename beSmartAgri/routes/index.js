@@ -5,6 +5,7 @@ const deviceRoutes = require ('./deviceRoutes')
 const adminRoutes = require ('./adminRoutes')
 const iotRoutes = require('./iotRoutes')
 const geeRoutes = require('./geeRoutes')
+const cropHealthRoutes = require('./cropHealthRoutes')
 //Admin
 routes.use('/patriot', adminRoutes)
 
@@ -20,6 +21,7 @@ routes.use('/iot', iotRoutes)
 
 routes.use('/gee', geeRoutes)
 
+routes.use('/cropHealth', cropHealthRoutes)
 
 
 

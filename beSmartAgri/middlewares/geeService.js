@@ -5,7 +5,8 @@ const {
 
 const {
     Farm,
-    GeeHistory
+    GeeHistory,
+    Crop
 } = require('../models')
 
 class GeeService {
@@ -1368,13 +1369,13 @@ class GeeService {
      static async saveGeeHistory(
          farmId,
          targetDate,
-         cropId = null
+         cropId
      ) {
 
          try {
 
              // =========================================
-             // 1. VALIDASI FARM
+             // 1. VALIDASI FARM DAN CROP
              // =========================================
 
              const farm =
@@ -1386,6 +1387,19 @@ class GeeService {
                      "Farm tidak ditemukan"
                  );
 
+             }
+             const crop = await Crop.findByPk(cropId);
+
+             if (!crop) {
+                 throw new Error(
+                     "Crop tidak ditemukan"
+                 );
+             }
+
+             if (crop.farmId !== farmId) {
+                 throw new Error(
+                     "Crop tidak terdaftar pada farm tersebut"
+                 );
              }
 
 
