@@ -1,6 +1,9 @@
 const GeeService =
     require("../middlewares/geeService");
 
+const WeatherForecastService =
+    require("../middlewares/weatherForecastService");
+
 class GeeController {
 
     static async testConnection(req, res) {
@@ -211,6 +214,175 @@ class GeeController {
                 success: false,
 
                 message: "Gagal mengambil data weather GEE",
+
+                error: error.message
+
+            });
+
+        }
+
+    }
+
+    static async saveWeather(req, res) {
+
+        try {
+
+            const {
+                farmId,
+                date
+            } = req.body;
+
+
+            if (!farmId) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message: "farmId wajib diisi"
+
+                });
+
+            }
+
+
+            if (!date) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message: "date wajib diisi"
+
+                });
+
+            }
+
+
+            const result =
+                await WeatherForecastService.saveWeather(
+                    farmId,
+                    date
+                );
+
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: result.action === "created" ?
+                    "Weather berhasil disimpan" :
+                    "Weather berhasil diperbarui",
+
+                data: result.data
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Save Weather Error:",
+                error
+            );
+
+
+            return res.status(500).json({
+
+                success: false,
+
+                message: "Gagal menyimpan data weather",
+
+                error: error.message
+
+            });
+
+        }
+
+    }
+    static async saveGeeHistory(req, res) {
+
+        try {
+
+            const {
+                farmId,
+                date,
+                cropId
+            } = req.body;
+
+
+            // =========================================
+            // VALIDASI FARM
+            // =========================================
+
+            if (!farmId) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message: "farmId wajib diisi"
+
+                });
+
+            }
+
+
+            // =========================================
+            // VALIDASI DATE
+            // =========================================
+
+            if (!date) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message: "date wajib diisi"
+
+                });
+
+            }
+
+
+            // =========================================
+            // SAVE GEE HISTORY
+            // =========================================
+
+            const result =
+                await GeeService.saveGeeHistory(
+                    farmId,
+                    date,
+                    cropId ?? null
+                );
+
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: result.action === "created" ?
+                    "Data GEE berhasil disimpan" :
+                    "Data GEE berhasil diperbarui",
+
+                data: result.data
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "saveGeeHistory controller error:",
+                error
+            );
+
+
+            return res.status(500).json({
+
+                success: false,
+
+                message: "Gagal menyimpan data GEE",
 
                 error: error.message
 

@@ -38,7 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     temperature: DataTypes.FLOAT,
     radiation: DataTypes.FLOAT,
     wind: DataTypes.FLOAT,
-    humidity: DataTypes.FLOAT
+    humidity: DataTypes.FLOAT,
+    observationDate: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'GeeHistory',

@@ -4,7 +4,8 @@ const {
 } = require("../config/gee");
 
 const {
-    Farm
+    Farm,
+    GeeHistory
 } = require('../models')
 
 class GeeService {
@@ -1310,6 +1311,8 @@ class GeeService {
                 farmName: farm.name,
 
                 requestedDate: targetDate,
+                observationDate:
+                     era5ObservationDate,
 
                 observation: {
 
@@ -1362,6 +1365,204 @@ class GeeService {
         }
 
     }
+     static async saveGeeHistory(
+         farmId,
+         targetDate,
+         cropId = null
+     ) {
+
+         try {
+
+             // =========================================
+             // 1. VALIDASI FARM
+             // =========================================
+
+             const farm =
+                 await Farm.findByPk(farmId);
+
+             if (!farm) {
+
+                 throw new Error(
+                     "Farm tidak ditemukan"
+                 );
+
+             }
+
+
+             // =========================================
+             // 2. ANALISIS SATELLITE
+             // =========================================
+
+             const satellite =
+                 await this.analyzeSatellite(
+                     farmId,
+                     targetDate
+                 );
+
+
+             console.log(
+                 "Satellite untuk GeeHistory:",
+                 satellite
+             );
+
+
+             // =========================================
+             // 3. ANALISIS WEATHER
+             // =========================================
+
+             const weather =
+                 await this.analyzeWeather(
+                     farmId,
+                     targetDate
+                 );
+
+
+             console.log(
+                 "Weather untuk GeeHistory:",
+                 weather
+             );
+
+
+             // =========================================
+             // 4. SIAPKAN DATA HISTORY
+             // =========================================
+
+             const historyData = {
+
+                 date: targetDate,
+
+                 farmId: farmId,
+
+                 cropId: cropId,
+                 observationDate:
+                     satellite.observationDate ??
+                     weather.observationDate ??
+                     null,
+
+
+                 // =====================================
+                 // SATELLITE
+                 // =====================================
+
+                 ndvi: satellite.indices.NDVI ?? null,
+
+                 evi: satellite.indices.EVI ?? null,
+
+                 gndvi: satellite.indices.GNDVI ?? null,
+
+                 savi: satellite.indices.SAVI ?? null,
+
+                 ndmi: satellite.indices.NDMI ?? null,
+
+                 ndwi: satellite.indices.NDWI ?? null,
+
+                 msi: satellite.indices.MSI ?? null,
+
+
+                 // =====================================
+                 // WEATHER
+                 // =====================================
+
+                 rainfall: weather.rainfall ?? null,
+
+                 soilMoisture: weather.soilMoisture ?? null,
+
+                 temperature: weather.temperature ?? null,
+
+                 radiation: weather.radiation ?? null,
+
+
+                 // =====================================
+                 // BELUM ADA SUMBER DATA
+                 // =====================================
+
+                 lai: null,
+
+                 fvc: null,
+
+                 wind: null,
+
+                 humidity: null
+
+             };
+
+
+             console.log(
+                 "Data yang akan disimpan GeeHistory:",
+                 historyData
+             );
+
+
+             // =========================================
+             // 5. CEK DATA SUDAH ADA
+             // =========================================
+
+             const existing =
+                 await GeeHistory.findOne({
+
+                     where: {
+
+                         farmId: farmId,
+
+                         date: targetDate
+
+                     }
+
+                 });
+
+
+             // =========================================
+             // 6. UPDATE
+             // =========================================
+
+             if (existing) {
+
+                 await existing.update(
+                     historyData
+                 );
+
+                 return {
+
+                     action: "updated",
+
+                     data: existing
+
+                 };
+
+             }
+
+
+             // =========================================
+             // 7. CREATE
+             // =========================================
+
+             const result =
+                 await GeeHistory.create(
+                     historyData
+                 );
+
+
+             return {
+
+                 action: "created",
+
+                 data: result
+
+             };
+
+
+         } catch (error) {
+
+             console.error(
+                 "GEE saveGeeHistory error:",
+                 error
+             );
+
+             throw error;
+
+         }
+
+     }
 }
 
 module.exports = GeeService;

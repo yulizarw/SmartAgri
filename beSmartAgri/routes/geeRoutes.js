@@ -25,4 +25,15 @@ router.post(
     GeeController.analyzeWeather
 );
 
+router.post(
+    "/weather/save",
+    GeeController.saveWeather
+);
+
+// save geehistory
+router.post(
+    "/history",
+    GeeController.saveGeeHistory
+);
+
 module.exports = router;
