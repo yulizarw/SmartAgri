@@ -1,18 +1,20 @@
 const routes = require('express').Router()
 const userRoutes = require('./userRoutes')
 // const productRoutes = require('./productRoutes')
-const deviceRoutes = require ('./deviceRoutes')
-const adminRoutes = require ('./adminRoutes')
+const deviceRoutes = require('./deviceRoutes')
+const adminRoutes = require('./adminRoutes')
 const iotRoutes = require('./iotRoutes')
 const geeRoutes = require('./geeRoutes')
 const cropHealthRoutes = require('./cropHealthRoutes')
+const recommendationRoutes = require('./recommendationRoutes')
+const decisionLogRoutes = require('./decisionLogRoutes')
 //Admin
 routes.use('/patriot', adminRoutes)
 
 // user
-routes.use('/user',userRoutes)
+routes.use('/user', userRoutes)
 // simulator
-routes.use('/devices',deviceRoutes)
+routes.use('/devices', deviceRoutes)
 
 //iotRoutes
 routes.use('/iot', iotRoutes)
@@ -22,6 +24,8 @@ routes.use('/iot', iotRoutes)
 routes.use('/gee', geeRoutes)
 
 routes.use('/cropHealth', cropHealthRoutes)
+routes.use('/recommendations', recommendationRoutes)
+routes.use('/decision', decisionLogRoutes)
 
 
 
