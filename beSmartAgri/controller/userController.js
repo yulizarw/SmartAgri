@@ -69,11 +69,12 @@ module.exports = class userController {
             console.log(params, '<<<<')
 
             let loginUser = await User.findOne({
-                where: {
-                    email: params.email
-                }
-            })
-            console.log(bcrypt.compareSync(params.password, loginUser.email))
+              where: {
+                email: params.email,
+              },
+              include: Role,
+            });
+            console.log(loginUser)
             if (
                 loginUser &&
                 bcrypt.compareSync(params.password, loginUser.password)
@@ -91,14 +92,15 @@ module.exports = class userController {
                 );
 
                 res.status(201).json({
-                    id: loginUser.id,
-                    access_token,
-                    email: loginUser.userEmail,
-                    fullName: loginUser.fullName,
-                    roleId: loginUser.roleId,
-                    password: loginUser.password,
-                    phone: loginUser.phone,
-                    address: loginUser.address
+                    // id: loginUser.id,
+                    // access_token,
+                    // email: loginUser.userEmail,
+                    // fullName: loginUser.fullName,
+                    // roleId: loginUser.roleId,
+                    // password: loginUser.password,
+                    // phone: loginUser.phone,
+                    // address: loginUser.address
+                    loginUser,access_token
                 });
             } else {
                 res.status(400).json("Password / Email yang anda masukkan SALAH");

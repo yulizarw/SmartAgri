@@ -17,15 +17,23 @@ module.exports = (sequelize, DataTypes) => {
 
     }
   }
-  DecisionLog.init({
-    sensorValue: DataTypes.FLOAT,
-    geeValue: DataTypes.FLOAT,
-    confidence: DataTypes.FLOAT,
-    decision: DataTypes.STRING,
-    reason: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'DecisionLog',
-  });
+  DecisionLog.init(
+    {
+      sensorValue: DataTypes.FLOAT,
+      geeValue: DataTypes.FLOAT,
+      confidence: DataTypes.FLOAT,
+      decision: DataTypes.STRING,
+      reason: DataTypes.STRING,
+      source: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue: "AUTOMATIC",
+      },
+    },
+    {
+      sequelize,
+      modelName: "DecisionLog",
+    },
+  );
   return DecisionLog;
 };

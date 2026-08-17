@@ -8,6 +8,7 @@ const geeRoutes = require('./geeRoutes')
 const cropHealthRoutes = require('./cropHealthRoutes')
 const recommendationRoutes = require('./recommendationRoutes')
 const decisionLogRoutes = require('./decisionLogRoutes')
+const irrigationRoutes = require ('./irrigationRoutes')
 //Admin
 routes.use('/patriot', adminRoutes)
 
@@ -26,7 +27,7 @@ routes.use('/gee', geeRoutes)
 routes.use('/cropHealth', cropHealthRoutes)
 routes.use('/recommendations', recommendationRoutes)
 routes.use('/decision', decisionLogRoutes)
-
+routes.use("/irrigation", irrigationRoutes);
 
 
 
