@@ -1,334 +1,436 @@
-const axios = require('axios')
-const {
-    Role,
-    Farm,
-    Sensor,
-    Device,
-    User,
-    Crop,
-} = require('../models')
+const axios = require("axios");
+const { Role, Farm, Sensor, Device, User, Crop } = require("../models");
 
 module.exports = class adminController {
-    static async changeRole(req, res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId
-            const id = req.params.id
+  static async changeRole(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
+      const id = req.params.id;
 
-            let params = {
-                roleId: req.body.roleId
-            }
-            let filterUser = await User.findOne({
-                where: {
-                    id
-                }
-            })
-            console.log(filterUser.roleId)
+      let params = {
+        roleId: req.body.roleId,
+      };
+      let filterUser = await User.findOne({
+        where: {
+          id,
+        },
+      });
+      console.log(filterUser.roleId);
 
-            if (adminIsLogin == 1) {
-
-                if (filterUser) {
-                    if (!filterUser.roleId) {
-                        let editRoleUser = await User.update(params, {
-                            where: {
-                                id
-                            },
-                            returning: true
-                        })
-                        if (editRoleUser[0] == 0) {
-                            res.status(400).json('Pengguna Tidak Terdaftar')
-
-                        } else if (!params) {
-                            res.status(400).json('Silahkan isi detail Role')
-                        } else {
-                            res.status(200).json(`User with id ${id} has been updated`)
-                        }
-                    } else {
-                        res.status(409).json('User sudah memiliki role')
-                    }
-
-                } else {
-                    res.status(404).json('Pengguna Tidak Terdaftar')
-                }
+      if (adminIsLogin == 1) {
+        if (filterUser) {
+          if (!filterUser.roleId) {
+            let editRoleUser = await User.update(params, {
+              where: {
+                id,
+              },
+              returning: true,
+            });
+            if (editRoleUser[0] == 0) {
+              res.status(400).json("Pengguna Tidak Terdaftar");
+            } else if (!params) {
+              res.status(400).json("Silahkan isi detail Role");
             } else {
-                res.status(401).json('Anda Tidak Memiliki Akses Ini')
+              res.status(200).json(`User with id ${id} has been updated`);
             }
-
-
-        } catch (err) {
-            res.status(500).json(error)
+          } else {
+            res.status(409).json("User sudah memiliki role");
+          }
+        } else {
+          res.status(404).json("Pengguna Tidak Terdaftar");
         }
+      } else {
+        res.status(401).json("Anda Tidak Memiliki Akses Ini");
+      }
+    } catch (err) {
+      res.status(500).json(error);
     }
+  }
 
+  static async createFarm(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-    static async createFarm(req, res) {
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
 
-        try {
+      const params = {
+        name: req.body.name,
+        area: req.body.area,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        polygon: req.body.polygon,
+        address: req.body.address,
+        status: req.body.status,
+        userId: req.body.userId,
+      };
 
-            const adminIsLogin = req.userLogin.roleId;
+      const searchFarm = await Farm.findOne({
+        where: {
+          name: params.name,
+        },
+      });
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
+      if (searchFarm) {
+        return res.status(409).json({
+          message: "Lahan sudah ada",
+        });
+      }
 
-            const params = {
-                name: req.body.name,
-                area: req.body.area,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude,
-                polygon: req.body.polygon,
-                address: req.body.address,
-                status: req.body.status,
-                userId: req.body.userId
-            };
+      const farm = await Farm.create(params);
 
-            const searchFarm = await Farm.findOne({
-                where: {
-                    name: params.name
-                }
-            });
+      return res.status(201).json({
+        success: true,
+        data: farm,
+      });
+    } catch (err) {
+      console.log(err);
 
-            if (searchFarm) {
-                return res.status(409).json({
-                    message: "Lahan sudah ada"
-                });
-            }
-
-            const farm = await Farm.create(params);
-
-            return res.status(201).json({
-                success: true,
-                data: farm
-            });
-
-        } catch (err) {
-
-            console.log(err);
-
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-
-        }
-
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-    static async listFarm(req, res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId;
+  static async listFarm(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
 
-            const listAllFarm = await Farm.findAll()
+      const listAllFarm = await Farm.findAll();
 
-            return res.status(201).json(listAllFarm);
-
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      return res.status(201).json(listAllFarm);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-    static async updateFarm(req, res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId;
+  static async updateFarm(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
-            let id = req.params.id
-            let params = {
-                name: req.body.name,
-                area: req.body.area,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude,
-                polygon: req.body.polygon,
-                address: req.body.address,
-                status: req.body.status,
-                userId: req.body.userId
-            };
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+      let id = req.params.id;
+      let params = {
+        name: req.body.name,
+        area: req.body.area,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        polygon: req.body.polygon,
+        address: req.body.address,
+        status: req.body.status,
+        userId: req.body.userId,
+      };
 
-            const searchFarm = await Farm.findOne({
-                where: {
-                    id
-                }
-            });
-            // console.log(searchFarm.name)
-            if (searchFarm) {
-                const changeDataFarm = await Farm.update(params, {
-                    where: {
-                        id
-                    },
-                    returning: true
-                })
-                return res.status(201).json(`Data pada ${searchFarm.name} telah diganti`)
-            }
-
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      const searchFarm = await Farm.findOne({
+        where: {
+          id,
+        },
+      });
+      // console.log(searchFarm.name)
+      if (searchFarm) {
+        const changeDataFarm = await Farm.update(params, {
+          where: {
+            id,
+          },
+          returning: true,
+        });
+        return res
+          .status(201)
+          .json(`Data pada ${searchFarm.name} telah diganti`);
+      }
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-    static async deleteFarm(req, res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId;
+  static async deleteFarm(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
-            let id = req.params.id
-            const searchFarm = await Farm.findOne({
-                where: {
-                    id
-                }
-            });
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+      let id = req.params.id;
+      const searchFarm = await Farm.findOne({
+        where: {
+          id,
+        },
+      });
 
-            if (!searchFarm){
-                return res.status(404).json(`Tidak terdapat data Lahan ini`)
-            }
+      if (!searchFarm) {
+        return res.status(404).json(`Tidak terdapat data Lahan ini`);
+      }
 
-            let hapusFarm = await Farm.destroy({where:{id}})
-            return res.status(201).json(`Data ${searchFarm.name} telah dihapus`)
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      let hapusFarm = await Farm.destroy({ where: { id } });
+      return res.status(201).json(`Data ${searchFarm.name} telah dihapus`);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-    static async createDevice(req,res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId;
+  static async createDevice(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
 
-            let params = {
-                deviceCode: req.body.deviceCode,
-                deviceName: req.body.deviceName,
-                firmWare: req.body.firmWare,
-                ipAddress: req.body.ipAddress,
-                status: req.body.status,
-                farmId: req.body.farmId,
-                macAddress: req.body.macAddress,
-                connectionType: req.body.connectionType,
-                lastSeen: req.body.lastSeen,
-                apikey: "T4nahairku"
-            }
+      let params = {
+        deviceCode: req.body.deviceCode,
+        deviceName: req.body.deviceName,
+        firmWare: req.body.firmWare,
+        ipAddress: req.body.ipAddress,
+        status: req.body.status,
+        farmId: req.body.farmId,
+        macAddress: req.body.macAddress,
+        connectionType: req.body.connectionType,
+        lastSeen: req.body.lastSeen,
+        apikey: "T4nahairku",
+      };
 
-            let searchDevice = await Device.findOne({where:{deviceCode:params.deviceCode}})
-            if (searchDevice) {
-                return res.status(409).json({
-                    message: "Device sudah ada"
-                });
-            }
+      let searchDevice = await Device.findOne({
+        where: { deviceCode: params.deviceCode },
+      });
+      if (searchDevice) {
+        return res.status(409).json({
+          message: "Device sudah ada",
+        });
+      }
 
-            let saveDevice = await Device.create(params)
-            return res.status(201).json(`${params.deviceCode} sudah tersimpan dalam database`)
-        }catch(err){
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      let saveDevice = await Device.create(params);
+      return res
+        .status(201)
+        .json(`${params.deviceCode} sudah tersimpan dalam database`);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-     static async createSensor(req,res) {
-        try {
-            const adminIsLogin = req.userLogin.roleId;
+  static async createSensor(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
 
-            let params = {
-                sensorType: req.body.sensorType,
-                pin: req.body.pin,
-                unit: req.body.unit,
-                location: req.body.location,
-                deviceId: req.body.deviceId,
-            }
+      let params = {
+        sensorType: req.body.sensorType,
+        pin: req.body.pin,
+        unit: req.body.unit,
+        location: req.body.location,
+        deviceId: req.body.deviceId,
+      };
 
-            let searchDevice = await Sensor.findOne({where:{pin:params.pin}})
-            if (searchDevice) {
-                return res.status(409).json({
-                    message: "Sensor sudah ada untuk pin tersebut"
-                });
-            }
+      let searchDevice = await Sensor.findOne({ where: { pin: params.pin } });
+      if (searchDevice) {
+        return res.status(409).json({
+          message: "Sensor sudah ada untuk pin tersebut",
+        });
+      }
 
-            let saveDevice = await Sensor.create(params)
-            return res.status(201).json(`${params.sensorType} pada ${params.pin} sudah tersimpan dalam database `)
-        }catch(err){
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      let saveDevice = await Sensor.create(params);
+      return res
+        .status(201)
+        .json(
+          `${params.sensorType} pada ${params.pin} sudah tersimpan dalam database `,
+        );
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-    static async createCrop (req, res) {
-        try{
-            const adminIsLogin = req.userLogin.roleId;
+  static async createCrop(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
 
-            if (!adminIsLogin) {
-                return res.status(401).json({
-                    message: "Anda Tidak Memiliki Akses"
-                });
-            }
-            // yang bisa di update itu bisa itu harvestDate, targetNdvi, soilmoisture dll
-            let params = {
-                cropName : req.body.cropName,
-                variety : req.body.variety,
-                plantingDate : req.body.plantingDate,
-                harvestDate : req.body.harvestDate,
-                targetMoisture : req.body.targetMoisture,
-                targetNDVI : req.body.targetNDVI,
-                targetTemperature : req.body.targetTemperature,
-                status : req.body.status,
-                farmId: req.body.farmId
-            }
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+      // yang bisa di update itu bisa itu harvestDate, targetNdvi, soilmoisture dll
+      let params = {
+        cropName: req.body.cropName,
+        variety: req.body.variety,
+        plantingDate: req.body.plantingDate,
+        harvestDate: req.body.harvestDate,
+        targetMoisture: req.body.targetMoisture,
+        targetNDVI: req.body.targetNDVI,
+        targetTemperature: req.body.targetTemperature,
+        status: req.body.status,
+        farmId: req.body.farmId,
+      };
 
-            let searchCrop = await Crop.findOne({
-                where: {
-                    cropName: params.cropName,
-                    farmId: params.farmId
-                }
-            })
+      let searchCrop = await Crop.findOne({
+        where: {
+          cropName: params.cropName,
+          farmId: params.farmId,
+        },
+      });
 
-           
-            if (searchCrop){
-                return res.status(409).json(`${params.cropName} sudah ditanam pada lahan ${params.farmId}`)
-            }
+      if (searchCrop) {
+        return res
+          .status(409)
+          .json(`${params.cropName} sudah ditanam pada lahan ${params.farmId}`);
+      }
 
-            await Crop.create(params)
-            return res.status(201).json(`${params.cropName} telah berhasil ditanam pada lahan ${params.farmId}`)
-        }catch(err){
-             return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
+      await Crop.create(params);
+      return res
+        .status(201)
+        .json(
+          `${params.cropName} telah berhasil ditanam pada lahan ${params.farmId}`,
+        );
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
+  }
 
-}
+  static async cropList(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
+
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+
+      let getAllCrop = await Crop.findAll({
+        include: [
+          {
+            model: Farm,
+          },
+        ],
+      });
+      if (getAllCrop) {
+        res.status(200).json(getAllCrop);
+      } else {
+        res.status(404).json("Belum Ada Tanaman");
+      }
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  static async updateCrop(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
+
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+      let id = req.params.id;
+      const searchCrop = await Crop.findOne({
+        where: {
+          id,
+        },
+      });
+
+      console.log(searchCrop,'adasd');
+      let params = {
+        cropName: req.body.cropName,
+        variety: req.body.variety,
+        plantingDate: req.body.plantingDate,
+        harvestDate: req.body.harvestDate,
+        targetMoisture: req.body.targetMoisture,
+        targetNDVI: req.body.targetNDVI,
+        targetTemperature: req.body.targetTemperature,
+        status: req.body.status,
+        farmId: searchCrop.farmId,
+      };
+
+      // console.log(searchFarm.name)
+      if (searchCrop) {
+        const changeDataCrop = await Crop.update(params, {
+          where: {
+            id,
+          },
+          returning: true,
+        });
+        return res
+          .status(201)
+          .json(`Data pada ${searchCrop.name} telah diganti`);
+      }
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  static async deleteCrop(req, res) {
+    try {
+      const adminIsLogin = req.userLogin.roleId;
+
+      if (!adminIsLogin) {
+        return res.status(401).json({
+          message: "Anda Tidak Memiliki Akses",
+        });
+      }
+      let id = req.params.id;
+      const searchCrop = await Crop.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!searchCrop) {
+        return res.status(404).json(`Tidak terdapat data Lahan ini`);
+      }
+
+      let hapusCrop = await Crop.destroy({ where: { id } });
+      return res.status(201).json(`Data ${searchCrop.name} telah dihapus`);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+};

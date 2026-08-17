@@ -29,6 +29,15 @@ routes.post('/create-sensor', adminController.createSensor)
 
 //create crops
 routes.post('/create-crop', adminController.createCrop)
+
+// list crops
+routes.get('/list-crop',adminController.cropList)
+
+// update crop
+routes.patch('/update-crop/:id', adminController.updateCrop)
+// delete crop
+routes.delete('/delete-crop/:id', adminController.deleteCrop)
+
 //assign device
 
 //dan seluruh pembacaan sensor,battery,gee,pokoknya seluruh tabel yang ada
