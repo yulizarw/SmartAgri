@@ -28,8 +28,8 @@ startAutomationScheduler();
 startGeeScheduler();
 
 // TEST MANUAL
-// runGeeAnalysis();
-// runAutomation();
+runGeeAnalysis();
+runAutomation();
 app.listen(port, () => {
   console.log("dis app listening to " + port + " y pal");
 });
