@@ -16,3 +16,6 @@ build/
 # Mengabaikan file sistem operasi
 .DS_Store
 Thumbs.db
+
+# private key googleearth
+beSmartAgri/config/geePrivateKey/

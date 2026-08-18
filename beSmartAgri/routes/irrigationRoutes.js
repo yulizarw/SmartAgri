@@ -16,4 +16,8 @@ router.post("/override", IrrigationController.override);
 
 router.post("/resume-auto", IrrigationController.resumeAuto);
 
+router.get("/status", IrrigationController.getStatus);
+
+router.get("/history", IrrigationController.getHistory);
+
 module.exports = router;

@@ -36,4 +36,10 @@ router.post(
     GeeController.saveGeeHistory
 );
 
+// get geehistory
+router.get("/get-history",GeeController.getHistory)
+//get weatherhistory
+router.get("/get-weather-history", GeeController.fetchWeatherHistory)
+
+
 module.exports = router;

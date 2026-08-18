@@ -213,7 +213,7 @@ module.exports = class adminController {
         macAddress: req.body.macAddress,
         connectionType: req.body.connectionType,
         lastSeen: req.body.lastSeen,
-        apikey: "T4nahairku",
+        apiKey: `SMARTAGRI-${req.body.deviceCode}`,
       };
 
       let searchDevice = await Device.findOne({
@@ -230,6 +230,7 @@ module.exports = class adminController {
         .status(201)
         .json(`${params.deviceCode} sudah tersimpan dalam database`);
     } catch (err) {
+      console.error("CREATE DEVICE ERROR:", err);
       return res.status(500).json({
         success: false,
         message: err.message,

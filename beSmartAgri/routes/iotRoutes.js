@@ -32,6 +32,10 @@ router.post(
     "/sensor-reading",
     IoTController.sensorReading
 );
+// get sensor reading di tabel
+router.get("/get-reading",IoTController.fetchReading)
+
+router.get("/reading/:deviceId", IoTController.getReadingPerDevice)
 
 /*
 |--------------------------------------------------------------------------
