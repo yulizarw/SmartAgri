@@ -49,7 +49,7 @@ module.exports = class adminController {
 
   static async createFarm(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+     
 
       if (!adminIsLogin) {
         return res.status(401).json({
@@ -98,13 +98,13 @@ module.exports = class adminController {
 
   static async listFarm(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
 
       const listAllFarm = await Farm.findAll();
 
@@ -119,13 +119,13 @@ module.exports = class adminController {
 
   static async updateFarm(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
       let id = req.params.id;
       let params = {
         name: req.body.name,
@@ -165,13 +165,13 @@ module.exports = class adminController {
 
   static async deleteFarm(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
       let id = req.params.id;
       const searchFarm = await Farm.findOne({
         where: {
@@ -195,13 +195,13 @@ module.exports = class adminController {
 
   static async createDevice(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
 
       let params = {
         deviceCode: req.body.deviceCode,
@@ -240,13 +240,13 @@ module.exports = class adminController {
 
   static async createSensor(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
 
       let params = {
         sensorType: req.body.sensorType,
@@ -279,13 +279,13 @@ module.exports = class adminController {
 
   static async createCrop(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
       // yang bisa di update itu bisa itu harvestDate, targetNdvi, soilmoisture dll
       let params = {
         cropName: req.body.cropName,
@@ -328,13 +328,13 @@ module.exports = class adminController {
 
   static async cropList(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
 
       let getAllCrop = await Crop.findAll({
         include: [
@@ -358,13 +358,13 @@ module.exports = class adminController {
 
   static async updateCrop(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
       let id = req.params.id;
       const searchCrop = await Crop.findOne({
         where: {
@@ -407,13 +407,13 @@ module.exports = class adminController {
 
   static async deleteCrop(req, res) {
     try {
-      const adminIsLogin = req.userLogin.roleId;
+      // const adminIsLogin = req.userLogin.roleId;
 
-      if (!adminIsLogin) {
-        return res.status(401).json({
-          message: "Anda Tidak Memiliki Akses",
-        });
-      }
+      // if (!adminIsLogin) {
+      //   return res.status(401).json({
+      //     message: "Anda Tidak Memiliki Akses",
+      //   });
+      // }
       let id = req.params.id;
       const searchCrop = await Crop.findOne({
         where: {

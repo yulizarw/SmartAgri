@@ -2,7 +2,7 @@ const routes = require('express').Router()
 const adminController = require('../controller/adminController')
 const { authentication } = require('../middlewares/auth')
 
-routes.use(authentication)
+// routes.use(authentication)
 //put role ke user lain
 routes.put('/editRole/:id',adminController.changeRole)
 
